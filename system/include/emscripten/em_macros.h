@@ -7,8 +7,7 @@
 
 #pragma once
 
-#define EM_EXPORT __attribute__((used))
-#define EMSCRIPTEN_KEEPALIVE EM_EXPORT
+#define EMSCRIPTEN_KEEPALIVE __attribute__((used))
 
 #ifdef __wasm__
 #define EM_IMPORT(NAME) __attribute__((import_module("env"), import_name(#NAME)))
