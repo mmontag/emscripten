@@ -10355,10 +10355,10 @@ Module.arguments has been replaced with plain arguments_
 
   @no_fastcomp('lld-specific')
   def test_supported_linker_flags(self):
-    out = run_process([PYTHON, EMCC, path_from_root('tests', 'hello_world.cpp'), '-Wl,waka'], stderr=PIPE).stderr
-    self.assertContained('WARNING: ignoring unsupported linker flag: `waka', out)
+    out = run_process([PYTHON, EMCC, path_from_root('tests', 'hello_world.cpp'), '-Wl,--print-map'], stderr=PIPE).stderr
+    self.assertContained('WARNING: ignoring unsupported linker flag: `--print-map`', out)
     out = run_process([PYTHON, EMCC, path_from_root('tests', 'hello_world.cpp'),
-                       '-Wl,--no-check-features,--no-threads,-mllvm,-debug,--trace,--trace-symbol=main'], stderr=PIPE).stderr
+                       '-Wl,--no-check-features,--no-threads,-mllvm,-debug'], stderr=PIPE).stderr
     self.assertNotContained('WARNING: ignoring unsupported linker flag', out)
 
   def test_non_wasm_without_wasm_in_vm(self):

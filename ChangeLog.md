@@ -17,6 +17,9 @@ See docs/process.md for how version tagging works.
 
 Current Trunk
 -------------
+- Pass linker flags dirctly to wasm-ld by default.  We still filter out certain
+  flags explcitly.  If there are other flags that it would be useful for us
+  to ignore we can add them to the list of ignored flags.
 - Program entry points without extensions are now shell scripts rather than
   python programs. See #10729.  This means that `python emcc` no longer works.
   However `emcc`, `emcc.py` and `python emcc.py` all continue to work.
