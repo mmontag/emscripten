@@ -1125,17 +1125,14 @@ class libfetch(CXXLibrary, MTLibrary):
 
 
 class libasmfs(CXXLibrary, MTLibrary):
+  # ASMFS is looking for a maintainer
+  # https://github.com/emscripten-core/emscripten/issues/9534
   name = 'libasmfs'
   depends = ['libc++abi']
   never_force = True
 
   def get_files(self):
     return [shared.path_from_root('system', 'lib', 'fetch', 'asmfs.cpp')]
-
-  def can_build(self):
-    # ASMFS is looking for a maintainer
-    # https://github.com/emscripten-core/emscripten/issues/9534
-    return True
 
 
 class libhtml5(Library):
