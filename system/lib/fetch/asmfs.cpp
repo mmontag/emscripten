@@ -1054,7 +1054,7 @@ static long open(const char* pathname, int flags, int mode) {
   return (long)desc;
 }
 
-long __syscall5(long path, long flags, ...) // open
+long __sys_open(long path, long flags, ...)
 {
   va_list vl;
   va_start(vl, flags);
@@ -1194,7 +1194,7 @@ __wasi_errno_t __wasi_fd_close(__wasi_fd_t fd)
   return close(fd);
 }
 
-long __syscall9(long oldpath, long newpath) // link
+long __sys_link(long oldpath, long newpath)
 {
 #ifdef ASMFS_DEBUG
   EM_ASM(err('link(oldpath="' + UTF8ToString($0) + '", newpath="' + UTF8ToString($1) + '")'),
@@ -1206,7 +1206,7 @@ long __syscall9(long oldpath, long newpath) // link
   RETURN_ERRNO(ENOTSUP, "TODO: link() is a stub and not yet implemented in ASMFS");
 }
 
-long __syscall10(long path) // unlink
+long __sys_unlink(long path)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -1267,7 +1267,7 @@ long __syscall10(long path) // unlink
   return 0;
 }
 
-long __syscall12(long path) // chdir
+long __sys_chdir(long path)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -1303,7 +1303,7 @@ long __syscall12(long path) // chdir
   return 0;
 }
 
-long __syscall14(long path, long mode, long dev) // mknod
+long __sys_mknod(long path, long mode, long dev)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -1318,7 +1318,7 @@ long __syscall14(long path, long mode, long dev) // mknod
   RETURN_ERRNO(ENOTSUP, "TODO: mknod() is a stub and not yet implemented in ASMFS");
 }
 
-long __syscall15(long path, long mode) // chmod
+long __sys_chmod(long path, long mode)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -1358,7 +1358,7 @@ long __syscall15(long path, long mode) // chmod
   return 0;
 }
 
-long __syscall33(long path, long mode) // access
+long __sys_access(long path, long mode)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -1409,7 +1409,7 @@ long __syscall33(long path, long mode) // access
   return 0;
 }
 
-long __syscall36() // sync
+long __sys_sync()
 {
 #ifdef ASMFS_DEBUG
   EM_ASM(err('sync()'));
@@ -1419,7 +1419,7 @@ long __syscall36() // sync
   return 0;
 }
 
-// TODO: syscall38: int rename(const char *oldpath, const char *newpath);
+// TODO: __sys_rename: int rename(const char *oldpath, const char *newpath);
 
 long emscripten_asmfs_mkdir(const char* pathname, mode_t mode) {
 #ifdef ASMFS_DEBUG
@@ -1504,12 +1504,12 @@ uint64_t emscripten_asmfs_compute_memory_usage() {
   return emscripten_asmfs_compute_memory_usage_at_node(filesystem_root());
 }
 
-long __syscall39(long path, long mode) // mkdir
+long __sys_mkdir(long path, long mode)
 {
   return emscripten_asmfs_mkdir((const char *)path, mode);
 }
 
-long __syscall40(long path) // rmdir
+long __sys_rmdir(long path)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -1563,7 +1563,7 @@ long __syscall40(long path) // rmdir
   return 0;
 }
 
-long __syscall41(long fd) // dup
+long __sys_dup(long fd)
 {
 #ifdef ASMFS_DEBUG
   EM_ASM(err('dup(fd=' + $0 + ')'), fd);
@@ -1583,9 +1583,9 @@ long __syscall41(long fd) // dup
   RETURN_ERRNO(ENOTSUP, "TODO: dup() is a stub and not yet implemented in ASMFS");
 }
 
-// TODO: syscall42: int pipe(int pipefd[2]);
+// TODO: __sys_pipe: int pipe(int pipefd[2]);
 
-long __syscall54(long fd, long request, ...) // ioctl/sysctl
+long __sys_ioctl(long fd, long request, ...)
 {
   va_list vl;
   va_start(vl, request);
@@ -1601,13 +1601,13 @@ long __syscall54(long fd, long request, ...) // ioctl/sysctl
   RETURN_ERRNO(ENOTSUP, "TODO: ioctl() is a stub and not yet implemented in ASMFS");
 }
 
-// TODO: syscall60: mode_t umask(mode_t mask);
-// TODO: syscall63: dup2
-// TODO: syscall83: symlink
-// TODO: syscall85: readlink
-// TODO: syscall91: munmap
-// TODO: syscall94: fchmod
-// TODO: syscall102: socketcall
+// TODO: __sys_umask: mode_t umask(mode_t mask);
+// TODO: __sys_dup2: dup2
+// TODO: __sys_symlink: symlink
+// TODO: __sys_readlink: readlink
+// TODO: __sys_munmap: munmap
+// TODO: __sys_fchmod: fchmod
+// TODO: __sys_socketcall: socketcall
 
 __wasi_errno_t __wasi_fd_sync(__wasi_fd_t fd)
 {
@@ -1622,7 +1622,7 @@ __wasi_errno_t __wasi_fd_sync(__wasi_fd_t fd)
   return 0;
 }
 
-// TODO: syscall133: fchdir
+// TODO: __sys_fchdir: fchdir
 
 __wasi_errno_t __wasi_fd_seek(__wasi_fd_t fd, __wasi_filedelta_t offset,
     __wasi_whence_t whence, __wasi_filesize_t *newoffset)
@@ -1678,7 +1678,7 @@ __wasi_errno_t __wasi_fd_seek(__wasi_fd_t fd, __wasi_filedelta_t offset,
   return 0;
 }
 
-// TODO: syscall144: msync
+// TODO: __sys_msync: msync
 
 static long readv(int fd, const iovec *iov, int iovcnt) // syscall145
 {
@@ -1752,7 +1752,7 @@ static long readv(int fd, const iovec *iov, int iovcnt) // syscall145
   return numRead;
 }
 
-long __syscall3(long fd, long buf, long count) // read
+long __sys_read(long fd, long buf, long count)
 {
 #ifdef ASMFS_DEBUG
   EM_ASM(
@@ -1829,7 +1829,7 @@ static long writev(int fd, const iovec *iov, int iovcnt) // syscall146
   return total_write_amount;
 }
 
-long __syscall4(long fd, long buf, long count) // write
+long __sys_write(long fd, long buf, long count)
 {
 #ifdef ASMFS_DEBUG
   EM_ASM(
@@ -1861,13 +1861,13 @@ __wasi_errno_t __wasi_fd_write(
   return 0;
 }
 
-// TODO: syscall148: fdatasync
-// TODO: syscall168: poll
+// TODO: __sys_fdatasync: fdatasync
+// TODO: __sys_poll: poll
 
-// TODO: syscall180: pread64
-// TODO: syscall181: pwrite64
+// TODO: __sys_pread64: pread64
+// TODO: __sys_pwrite64: pwrite64
 
-long __syscall183(long buf, long size) // getcwd
+long __sys_getcwd(long buf, long size)
 {
 #ifdef ASMFS_DEBUG
   EM_ASM(err('getcwd(buf=0x' + $0 + ', size= ' + $1 + ')'), buf, size);
@@ -1891,9 +1891,9 @@ long __syscall183(long buf, long size) // getcwd
   return 0;
 }
 
-// TODO: syscall192: mmap2
-// TODO: syscall193: truncate64
-// TODO: syscall194: ftruncate64
+// TODO: __sys_mmap2: mmap2
+// TODO: __sys_truncate64: truncate64
+// TODO: __sys_ftruncate64: ftruncate64
 
 static long __stat64(inode* node, struct stat* buf) {
   buf->st_dev =
@@ -1931,7 +1931,7 @@ static long __stat64(inode* node, struct stat* buf) {
   return 0;
 }
 
-long __syscall195(long path, long buf) // SYS_stat64
+long __sys_stat64(long path, long buf)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -1975,7 +1975,7 @@ long __syscall195(long path, long buf) // SYS_stat64
   return __stat64(node, (struct stat *)buf);
 }
 
-long __syscall196(long path, long buf) // SYS_lstat64
+long __sys_lstat64(long path, long buf)
 {
   const char* pathname = (const char *)path;
 #ifdef ASMFS_DEBUG
@@ -2012,7 +2012,7 @@ long __syscall196(long path, long buf) // SYS_lstat64
   return __stat64(node, (struct stat*)buf);
 }
 
-long __syscall197(long fd, long buf) // SYS_fstat64
+long __sys_fstat64(long fd, long buf)
 {
 #ifdef ASMFS_DEBUG
   EM_ASM(
@@ -2030,11 +2030,11 @@ long __syscall197(long fd, long buf) // SYS_fstat64
   return __stat64(node, (struct stat*)buf);
 }
 
-// TODO: syscall198: lchown
-// TODO: syscall207: fchown32
-// TODO: syscall212: chown32
+// TODO: __sys_lchown32: lchown
+// TODO: __sys_fchown32: fchown32
+// TODO: __sys_chown32: chown32
 
-long __syscall220(long fd, long dirp, long count) // getdents64 (get directory entries 64-bit)
+long __sys_getdents64(long fd, long dirp, long count)
 {
   dirent* de = (dirent*)dirp;
   unsigned int dirents_size =
@@ -2109,26 +2109,26 @@ long __syscall220(long fd, long dirp, long count) // getdents64 (get directory e
   return desc->file_pos - orig_file_pos;
 }
 
-// TODO: syscall221: fcntl64
-// TODO: syscall268: statfs64
-// TODO: syscall269: fstatfs64
-// TODO: syscall295: openat
-// TODO: syscall296: mkdirat
-// TODO: syscall297: mknodat
-// TODO: syscall298: fchownat
-// TODO: syscall300: fstatat64
-// TODO: syscall301: unlinkat
-// TODO: syscall302: renameat
-// TODO: syscall303: linkat
-// TODO: syscall304: symlinkat
-// TODO: syscall305: readlinkat
-// TODO: syscall306: fchmodat
-// TODO: syscall307: faccessat
-// TODO: syscall320: utimensat
-// TODO: syscall324: fallocate
-// TODO: syscall330: dup3
-// TODO: syscall331: pipe2
-// TODO: syscall333: preadv
-// TODO: syscall334: pwritev
+// TODO: __sys_fcntl64: fcntl64
+// TODO: __sys_statfs64: statfs64
+// TODO: __sys_fstatfs64: fstatfs64
+// TODO: __sys_openat: openat
+// TODO: __sys_mkdirat: mkdirat
+// TODO: __sys_mknodat: mknodat
+// TODO: __sys_fchownat: fchownat
+// TODO: __sys_fstatat64: fstatat64
+// TODO: __sys_unlinkat: unlinkat
+// TODO: __sys_renameat: renameat
+// TODO: __sys_linkat: linkat
+// TODO: __sys_symlinkat: symlinkat
+// TODO: __sys_readlinkat: readlinkat
+// TODO: __sys_fchmodat: fchmodat
+// TODO: __sys_faccessat: faccessat
+// TODO: __sys_utimensat: utimensat
+// TODO: __sys_fallocate: fallocate
+// TODO: __sys_dup3: dup3
+// TODO: __sys_pipe2: pipe2
+// TODO: __sys_preadv: preadv
+// TODO: __sys_pwritev: pwritev
 
 } // ~extern "C"
